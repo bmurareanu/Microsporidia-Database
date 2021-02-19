@@ -2,7 +2,7 @@
 
 Code used for microsporidia database project.
 
-Publication link: TBD
+Publication link: N/A
 
 Contributors:
 Brandon Murareanu,
