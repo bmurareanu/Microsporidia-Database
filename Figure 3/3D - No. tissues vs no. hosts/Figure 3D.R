@@ -103,10 +103,11 @@ vdetermine_host_bin <- Vectorize(determine_host_bin)
 host_tissue_data <- host_tissue_data %>%
   mutate(host_bin = vdetermine_host_bin(num_hosts)) %>%
   group_by(host_bin) %>%
-  mutate(host_bin_freq = n())
+  # Fixed error with "`n()` must only be used inside dplyr verbs."
+  dplyr::mutate(host_bin_freq = n())
 
 host_bins_counted <- as.matrix(table(host_tissue_data$More_1_tissue,
-                           host_tissue_data$host_bin))
+                                     host_tissue_data$host_bin))
 
 
 # Chi-square test of independence
@@ -165,7 +166,10 @@ frequency_df <- as.data.frame(host_bins_counted) %>%
   select(Var2, Freq, host_bin_count, bin_proportion)
 
 
-# Perfect, let's make that bar graph of proportions
+# Perfect, let's make that bar graph of proportions!
+# NOTE: sometimes, extremely low frequencies get plotted instead of what is
+# seen in frequency_df
+# I don't know why this happens, but just a heads-up
 ggplot(data = frequency_df, aes(x = Var2, y = bin_proportion)) +
   geom_bar(stat = "identity", fill = "black") +
   labs(y = "Fraction Infecting 1 Tissue") +
@@ -175,5 +179,5 @@ ggplot(data = frequency_df, aes(x = Var2, y = bin_proportion)) +
         axis.title.x = element_blank()) +
   geom_text(aes(label = bin_proportion), nudge_y = 0.02, size = 5) +
   geom_signif(comparisons = list(c("1 Host", "2 Host"), c("1 Host", "4+ Host")),
-              annotations = c("p = 0.0046", p = "    p = 0.0025"), size = 1, tip_length = 0.1,
+              annotations = c("p = 5.6e-3", p = "    p = 8.0e-4"), size = 1, tip_length = 0.1,
               y_position = c(0.72, 0.78), textsize = 5)
