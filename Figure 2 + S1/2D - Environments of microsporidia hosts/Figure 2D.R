@@ -3,7 +3,7 @@
 # Creating venn diagram of microsporidia host environments
 #
 # Jason Jiang - Created: 2020/07/07
-#                     Last Edit: 2021/01/29
+#                     Last Edit: 2021/05/03
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -22,7 +22,7 @@ library(VennDiagram)
 
 
 # Set the working directory for R. This is what I use
-setwd("P:/Shared/Microsporidia database/Figure 2 (Jason)/2C - Environments of microsporidia hosts")
+setwd("P:/Shared/Microsporidia database/Figure 2/2D - Environments of microsporidia hosts")
 
 
 # Load in host masterlist spreadsheet, which contains host environment data
@@ -30,7 +30,7 @@ host_envs <- read_xlsx("Table S2 Host Masterlist.xlsx")
 
 host_envs <- host_envs %>%
   select(Environment) %>% # Only consider host environment data
-  filter(!is.na(Environment)) # Exclude rows without env data
+  filter(!is.na(Environment))
 
 
 # Create table of all unique environment combinations, and their frequencies
