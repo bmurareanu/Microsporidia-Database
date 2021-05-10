@@ -3,7 +3,7 @@
 # Making tissues frequency histogram
 #
 # Jason Jiang - Created: 2020/07/10
-#                     Last Edit: 2021/02/12
+#                     Last Edit: 2021/05/09
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -42,12 +42,18 @@ clean_str <- function(str) {
         collapse = "; ")
 }
 
+clean_str <- Vectorize(clean_str)
+
+
 check_if_ambiguous_or_systemic_infection <- function(Tissues) {
   any(infections_to_exclude %in% strsplit(Tissues, "; ")[[1]])
 }
 
+check_if_ambiguous_or_systemic_infection <-
+  Vectorize(check_if_ambiguous_or_systemic_infection)
+
+
 cleaned_tissues <- tissue_data %>%
-  rowwise() %>%
   filter(!is.na(Tissues)) %>% # Exclude species w/out tissue data
   mutate(Tissues = clean_str(Tissues)) %>% # Strip parentheses from tissue data
   filter(!check_if_ambiguous_or_systemic_infection(Tissues)) # Exclude species w/ general infections
@@ -70,10 +76,11 @@ determine_tissue_bin <- function(num_tissues) {
   }
 }
 
+determine_tissue_bin <- Vectorize(determine_tissue_bin)
+
 counted_tissues <- cleaned_tissues %>%
-  mutate(num_tissues = lengths(strsplit(Tissues, '; '))) %>%
-  rowwise() %>%
-  mutate(Infection_bin = determine_tissue_bin(num_tissues))
+  mutate(num_tissues = lengths(strsplit(Tissues, '; ')), 
+         Infection_bin = determine_tissue_bin(num_tissues))
 
 
 # Create a table of the tissue bin frequences, and manually move this data
