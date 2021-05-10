@@ -3,7 +3,7 @@
 # Compare median extant species between infected and uninfected animal phyla
 #
 # Jason Jiang - Created: 2020/08/31
-#                     Last Edit: 2021/01/22
+#                     Last Edit: 2021/05/03
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -24,7 +24,7 @@ library(ggsignif)
 
 
 # Set working directory
-setwd("P:/Shared/Microsporidia database/Figure 2 (Jason)/2B - Extant species in phyla")
+setwd("P:/Shared/Microsporidia database/Figure 2/2B - Extant species in phyla")
 
 
 # Load in spreadsheet with extant species counts for infected/uninfected metazoans
@@ -37,7 +37,7 @@ extants <- read_xlsx("Phyla extant species.xlsx") %>%
 # infected vs. uninfected phyla.
 # Extant species in infected phyla, on average, exceed extant species in
 # uninfected phyla
-wilcox.test(data = extants, Extant_species ~ Class) # p = 0.001017
+wilcox.test(data = extants, Extant_species ~ Class) # p = 0.000563
 
 
 # Make boxplot of median extant species between infected and uninfected metazoan
@@ -48,7 +48,7 @@ ggplot(extants, aes(x = Class, y = Extant_species, fill = Class)) +
   geom_boxplot(show.legend = FALSE) +
   geom_beeswarm(show.legend = FALSE) +
   geom_signif(size = 1.05, tip_length = 0.03, y_position=c(6.5),
-              xmin=c(1), xmax=c(2), annotation=c("p = 0.0010"), textsize = 4.5) +
+              xmin=c(1), xmax=c(2), annotation=c("p = 5.6e-4"), textsize = 4.5) +
   theme_bw() +
   theme(axis.text = element_text(size = 18, color = "black"),
         axis.title = element_text(size = 18),
