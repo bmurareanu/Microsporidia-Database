@@ -3,7 +3,7 @@
 # Analyze infections across environments
 #
 # Jason Jiang - Created: 2020/07/25
-#                     Last Edit: 2021/02/26
+#                     Last Edit: 2021/05/03
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -29,7 +29,7 @@ library(readxl)
 
 
 # Set working directory, this is what I use.
-setwd("P:/Shared/Microsporidia database/Figure S4 (Jason)/Fig S4B - Infections by environment")
+setwd("P:/Shared/Microsporidia database/Figure S4/Fig S4B - Infections by environment")
 
 
 # Load in the dataframe created from making Figure S4A
