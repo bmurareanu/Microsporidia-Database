@@ -3,7 +3,7 @@
 # Make bar charts of orders within phyla
 #
 # Jason Jiang - Created: 2020/07/12
-#                     Last Edit: 2021/02/12
+#                     Last Edit: 2021/05/03
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -20,7 +20,7 @@ library(readxl)
 
 
 # Set working directory, this is the directory I use
-setwd("P:/Shared/Microsporidia database/Figure 2 (Jason)/2C - Diversity of orders in major phyla")
+setwd("P:/Shared/Microsporidia database/Figure 2/2C - Diversity of orders in major phyla")
 
 
 # Load data containing host taxonomic information
