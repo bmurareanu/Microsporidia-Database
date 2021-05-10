@@ -3,7 +3,7 @@
 # Making bar chart of infected phyla diversity
 #
 # Jason Jiang - Created: 2020/07/20
-#                     Last Edit: 2021/02/12
+#                     Last Edit: 2021/05/03
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -21,18 +21,20 @@ library(readxl)
 
 
 # Set working directory
-setwd("P:/Shared/Microsporidia database/Figure 2 (Jason)/2A - Phyla infected by microsporidia")
+setwd("P:/Shared/Microsporidia database/Figure 2/2A - Phyla infected by microsporidia")
 
 
-# Load spreadsheet containing taxonomic data of microsporidia hosts
+# Load in host masterlist, which contains taxonomic data for every microsporida
+# host species
 host_taxonomic_data <-
   read_xlsx("Table S2 Host Masterlist.xlsx")
 
 
 # Narrow down dataframe to columns of interest only, and properly format all
-# taxonomic data entries, and mutate a new column containing host phyla only.
+# taxonomic data entries
+# Then, mutate in a new column for each host's phylum
 host_taxonomic_data <- host_taxonomic_data %>%
-  filter(!is.na(Taxonomy)) %>% # exclude hosts w/out taxonomic data
+  filter(!is.na(Taxonomy)) %>% # Exclude hosts w/out taxonomic data
   select(Host_formatted, Taxonomy) %>%
   rowwise() %>%
   mutate(Phylum = # Mutate column with host phyla
