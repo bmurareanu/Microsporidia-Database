@@ -3,7 +3,7 @@
 # Analyzing Clades - v1
 #
 # Brandon Murareanu - Created: 2020/09/23 
-#                     Last Edit: 2021/02/19 
+#                     Last Edit: 2021/05/09 
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -64,9 +64,9 @@ library(ggpubr)
 # Set working directory. Modify as need.
 # For 270 Species Tree, it's this:
 
-sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
-anadir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Analysis"
-maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
+sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
+anadir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Analysis"
+maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
 
 setwd(anadir)
 

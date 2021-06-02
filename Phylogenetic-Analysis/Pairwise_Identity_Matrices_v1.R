@@ -3,7 +3,7 @@
 # Creating Pairwise Sequence Identity Matrices - v1
 #
 # Brandon Murareanu - Created: 2020/08/04
-#                     Last Edit: 2021/02/19 
+#                     Last Edit: 2021/05/09 
 #
 # Reinke Lab - Microsporidia Database Project
 #
@@ -75,13 +75,13 @@ library(writexl)
 
 # Set working directory. Modify as need. For me, it's this (Big Tree 1 directory):
 
-sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1/Source"
-maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1"
+sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1/Source"
+maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1"
 
 # For 270 Species Tree, it's this:
 
-sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
-maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
+sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
+maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
 
 setwd(maindir)
 
