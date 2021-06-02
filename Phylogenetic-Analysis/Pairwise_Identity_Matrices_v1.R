@@ -75,13 +75,13 @@ library(writexl)
 
 # Set working directory. Modify as need. For me, it's this (Big Tree 1 directory):
 
-sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1/Source"
-maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1"
+sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1/Source"
+maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/Big_Tree_1"
 
 # For 270 Species Tree, it's this:
 
-sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
-maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
+sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
+maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
 
 setwd(maindir)
 
@@ -112,10 +112,10 @@ MSA13[["id"]] <- files1
 MSA13masked[["id"]] <- files1
 
 # Now we compute a pairwise identity matrix of sequence similarity using the "seqidentity" function from the 
-# bio3d package:
+# bio3d package. Edit: NVM, use the dist.alignment function instead.
 
-pim13 <- seqidentity(MSA13)
-pim13masked <- seqidentity(MSA13masked)
+#pim13 <- seqidentity(MSA13)
+#pim13masked <- seqidentity(MSA13masked)
 
 pim13 <- dist.alignment(MSA13, matrix="identity", gap=1)
 pim13 <- as.matrix(pim13)
@@ -186,6 +186,14 @@ rozrows2 <- which(pim13data[,2]=="Rozella_allomycis")
 rozrows <- c(rozrows1, rozrows2)
 pim13data <- pim13data[-rozrows,]
 rm(rozrows, rozrows1, rozrows2)
+
+# Remove all rows containing Pleistophora sp. 1, 2 or 3, according to Aaron's recommendations.
+
+pleirows1 <- which(pim13data[,1]=="Pleistophora_sp_1" | pim13data[,1]=="Pleistophora_sp_2" | pim13data[,1]=="Pleistophora_sp_3")
+pleirows2 <- which(pim13data[,2]=="Pleistophora_sp_1" | pim13data[,2]=="Pleistophora_sp_2" | pim13data[,2]=="Pleistophora_sp_3")
+pleirows <- c(pleirows1, pleirows2)
+pim13data <- pim13data[-pleirows,]
+rm(pleirows1, pleirows, pleirows2)
 
 # ------------------------------------------------------------------------------
 #
@@ -268,7 +276,7 @@ rm(ztemp, ytemp, xtemp, phytemp, ordtemp, clstemp, famtemp, qtemp, num)
 cladestotal3 <- cladestotal2
 empt <- which(cladestotal3[,9]=="")
 emptspe <- as.vector(cladestotal3[empt,1])
-emptspe <- emptspe[-6]
+emptspe <- emptspe[-c(2,3,4,9)]
 
 pim13data2 <- pim13data
 
@@ -319,6 +327,104 @@ for(i in 1:length(pim13data2[,1])) {
  
   rm(spe1, spe2, num1, num2, phy1, phy2, xtemp)
 }
+
+# Little calculation for paper... calculating proportion of species pairs with more or less than 80%
+# similarity that infect an arthropod or a chordate.
+
+o80 <- which(pim13data2[,3]>0.80)
+pim13data2o80 <- pim13data2[o80,]
+
+for(i in 1:length(pim13data2o80[,1])) {
+  spe1 <- pim13data2o80[i,1]
+  spe2 <- pim13data2o80[i,2]
+  num1 <- which(cladestotal3[,1]==spe1)
+  num2 <- which(cladestotal3[,1]==spe2)
+  
+  phy1 <- cladestotal3[num1,9]
+  phy1 <- unlist(strsplit(phy1, ";"))
+  phy2 <- cladestotal3[num2,9]
+  phy2 <- unlist(strsplit(phy2, ";"))
+  
+  if (isEmpty(phy1)==TRUE) {
+    phy1 <- ""
+  }
+  arth <- any(c(phy1, phy2)=="Arthropoda")
+  chor <- any(c(phy1, phy2)=="Chordata")
+  if (arth==TRUE) {
+    pim13data2o80[i,4] <- "Arthropoda"
+  } else {
+    pim13data2o80[i,4] <- "NO"
+  }
+  if (chor==TRUE) {
+    pim13data2o80[i,5] <- "Chordata"
+  } else {
+    pim13data2o80[i,5] <- "NO"
+  }
+  if (chor==TRUE & arth==TRUE) {
+    pim13data2o80[i,6] <- "Both"
+  } else {
+    pim13data2o80[i,6] <- "NO"
+  }
+ 
+  rm(spe1, spe2, num1, num2, phy1, phy2, arth, chor)
+}
+
+o80arth <- as.vector(pim13data2o80[,4])
+o80chor <- as.vector(pim13data2o80[,5])
+o80both <- as.vector(pim13data2o80[,6])
+
+u80 <- which(pim13data2[,3]<0.80)
+pim13data2u80 <- pim13data2[u80,]
+
+for(i in 1:length(pim13data2u80[,1])) {
+  spe1 <- pim13data2u80[i,1]
+  spe2 <- pim13data2u80[i,2]
+  num1 <- which(cladestotal3[,1]==spe1)
+  num2 <- which(cladestotal3[,1]==spe2)
+  
+  phy1 <- cladestotal3[num1,9]
+  phy1 <- unlist(strsplit(phy1, ";"))
+  phy2 <- cladestotal3[num2,9]
+  phy2 <- unlist(strsplit(phy2, ";"))
+  
+  if (isEmpty(phy1)==TRUE) {
+    phy1 <- ""
+  }
+  arth <- any(c(phy1, phy2)=="Arthropoda")
+  chor <- any(c(phy1, phy2)=="Chordata")
+  if (arth==TRUE) {
+    pim13data2u80[i,4] <- "Arthropoda"
+  } else {
+    pim13data2u80[i,4] <- "NO"
+  }
+  if (chor==TRUE) {
+    pim13data2u80[i,5] <- "Chordata"
+  } else {
+    pim13data2u80[i,5] <- "NO"
+  }
+  if (chor==TRUE & arth==TRUE) {
+    pim13data2u80[i,6] <- "Both"
+  } else {
+    pim13data2u80[i,6] <- "NO"
+  }
+  
+  rm(spe1, spe2, num1, num2, phy1, phy2, arth, chor)
+}
+
+u80arth <- as.vector(pim13data2u80[,4])
+u80chor <- as.vector(pim13data2u80[,5])
+u80both <- as.vector(pim13data2u80[,6])
+
+# Now for the actual calculations:
+
+prop.table(table(o80arth))
+prop.table(table(u80arth))
+prop.table(table(o80chor))
+prop.table(table(u80chor))
+prop.table(table(o80both))
+prop.table(table(u80both))
+
+# Calculation done!
 
 # --- Classes ---
 
@@ -575,21 +681,22 @@ ggplot(fzz1, aes(y=`Frequency of Shared Families`, x=`Sequence Pair Similarity`)
 # --- Making a Stacked Barplot with all four taxonyms ---
 
 pzz2 <- data.frame(pzz1, "Phyla", stringsAsFactors = FALSE)
+czz2 <- data.frame(czz1, "Classes", stringsAsFactors = FALSE)
+ozz2 <- data.frame(ozz1, "Orders", stringsAsFactors = FALSE)
+fzz2 <- data.frame(fzz1, "Families", stringsAsFactors = FALSE)
+
 colnames(pzz2) <- c("Sequence Pair Similarity", "Frequency of Shared Taxonomy", "Shared Taxonomy")
 pzz3 <- pzz2
 pzz3[,2] <- pzz2[,2]-czz2[,2]
 
-czz2 <- data.frame(czz1, "Classes", stringsAsFactors = FALSE)
 colnames(czz2) <- c("Sequence Pair Similarity", "Frequency of Shared Taxonomy", "Shared Taxonomy")
 czz3 <- czz2
 czz3[,2] <- czz2[,2]-ozz2[,2]
 
-ozz2 <- data.frame(ozz1, "Orders", stringsAsFactors = FALSE)
 colnames(ozz2) <- c("Sequence Pair Similarity", "Frequency of Shared Taxonomy", "Shared Taxonomy")
 ozz3 <- ozz2
 ozz3[,2] <- ozz2[,2]-fzz2[,2]
 
-fzz2 <- data.frame(fzz1, "Families", stringsAsFactors = FALSE)
 colnames(fzz2) <- c("Sequence Pair Similarity", "Frequency of Shared Taxonomy", "Shared Taxonomy")
 
 tzz0 <- rbind(pzz2, czz2, ozz2, fzz2)
@@ -636,13 +743,13 @@ ggplot(tzz1, aes(fill=`Shared Taxonomy`, y=`Frequency of Shared Taxonomy`, x=`Se
 # Adressing Aaron's questions about the ~10% of species with greater than 80% sequence similarity that
 # don't infect the same phyla:
 
-sim80 <- which(pim13data[,3]>0.8)
-sim80data <- pim13data[sim80,]
+sim80 <- which(pim13data2[,3]>0.8)
+sim80data <- pim13data2[sim80,]
 sim80phy <- which(sim80data[,4]==FALSE)
 sim80phydata <- sim80data[sim80phy,]
 
 sim80phydata <- data.frame(sim80phydata[,1:4], "Species 1 Host Phyla"=NA, "Species 2 Host Phyla"=NA, "Missing Phylum Data?"=NA, 
-                           "Species 1 Clade"=NA, "Species 2 Clade"=NA, "Species 1 Accession"=NA, "Species 2  Accession"=NA)
+                           "Species 1 Clade"=NA, "Species 2 Clade"=NA, "Species 1 Accession"=NA, "Species 2 Accession"=NA)
 colnames(sim80phydata) <- c("Species 1", "Species 2", "Similarity", "Shared Phylum?", "Species 1 Host Phyla", "Species 2 Host Phyla", "Missing Phylum Data?",
                             "Species 1 Clade", "Species 2 Clade", "Species 1 Accession", "Species 2 Accession")
 
@@ -687,6 +794,96 @@ for (i in 1:length(sim80phydata[,1])) {
 
 write.csv(sim80phydata,"./Analysis/Fig6/80%sim_unsharedphyla_v2.csv", row.names = FALSE)
 
+# Now, for less than 80% similarity:
+
+sim00 <- which(pim13data2[,3]<0.8)
+sim00data <- pim13data2[sim00,]
+sim00phy <- which(sim00data[,4]==FALSE)
+sim00phydata <- sim00data[sim00phy,]
+
+sim00phydata <- data.frame(sim00phydata[,1:4], "Species 1 Host Phyla"=NA, "Species 2 Host Phyla"=NA, "Missing Phylum Data?"=NA, 
+                           "Species 1 Clade"=NA, "Species 2 Clade"=NA, "Species 1 Accession"=NA, "Species 2 Accession"=NA)
+colnames(sim00phydata) <- c("Species 1", "Species 2", "Similarity", "Shared Phylum?", "Species 1 Host Phyla", "Species 2 Host Phyla", "Missing Phylum Data?",
+                            "Species 1 Clade", "Species 2 Clade", "Species 1 Accession", "Species 2 Accession")
+
+for (i in 1:length(sim00phydata[,1])) {
+  
+  spe1 <- sim00phydata[i,1]
+  spe2 <- sim00phydata[i,2]
+  
+  num1 <- which(cladestotal2[,1]==spe1)
+  num2 <- which(cladestotal2[,1]==spe2)
+  
+  phy1 <- cladestotal2[num1,9]
+  sim00phydata[i,5] <- phy1
+  phy1 <- unlist(strsplit(phy1, ";"))
+  
+  phy2 <- cladestotal2[num2,9]
+  sim00phydata[i,6] <- phy2
+  phy2 <- unlist(strsplit(phy2, ";"))
+  
+  if (isEmpty(phy1==TRUE)) {
+    sim00phydata[i,7] <- TRUE
+  } else if (isEmpty(phy2)==TRUE) {
+    sim00phydata[i,7] <- TRUE
+  } else {
+    sim00phydata[i,7] <- FALSE
+  }
+  
+  cla1 <- cladestotal2[num1,7]
+  sim00phydata[i,8] <- cla1
+  
+  cla2 <- cladestotal2[num2,7]
+  sim00phydata[i,9] <- cla2
+  
+  acc1 <- cladestotal2[num1,8]
+  sim00phydata[i,10] <- acc1
+  
+  acc2 <- cladestotal2[num2,8]
+  sim00phydata[i,11] <- acc2
+  
+  rm(spe1, spe2, num1, num2, phy1, phy2, cla1, cla2, acc1, acc2)
+}
+
+# Now compare:
+
+sim00ap <- which(sim00phydata[,5]=="Arthropoda" |  sim00phydata[,6]=="Arthropoda")
+sim00cp <- which(sim00phydata[,5]=="Chordata" |  sim00phydata[,6]=="Chordata")
+
+sim80ap <- which(sim80phydata[,5]=="Arthropoda" |  sim80phydata[,6]=="Arthropoda")
+sim80cp <- which(sim80phydata[,5]=="Chordata" |  sim80phydata[,6]=="Chordata")
+
+sim00cap1 <- which(sim00phydata[,5]=="Arthropoda" | sim00phydata[,5]=="Chordata") 
+sim00cap2 <- which(sim00phydata[,6]=="Arthropoda" | sim00phydata[,6]=="Chordata") 
+sim00phydatacap1 <- sim00phydata[sim00cap1,]
+sim00phydatacap2 <- sim00phydata[sim00cap2,]
+sim00cap <- sim00cap1[sim00cap1 %in% sim00cap2]
+sim00phydatacap <- sim00phydata[sim00cap,]
+
+sim80cap1 <- which(sim80phydata[,5]=="Arthropoda" | sim80phydata[,5]=="Chordata") 
+sim80cap2 <- which(sim80phydata[,6]=="Arthropoda" | sim80phydata[,6]=="Chordata") 
+sim80phydatacap1 <- sim80phydata[sim80cap1,]
+sim80phydatacap2 <- sim80phydata[sim80cap2,]
+sim80cap <- sim80cap1[sim80cap1 %in% sim80cap2]
+sim80phydatacap <- sim80phydata[sim80cap,]
+
+# Fraction of species pairs with hosts from different phyla that infect a Chordate host:
+
+length(sim00cp)/length(sim00phydata[,1])*100 # Pairs with <80% similarity
+length(sim80cp)/length(sim80phydata[,1])*100 # Pairs with >80% similarity
+
+# Fraction of species pairs with hosts from different phyla that infect an Arthropod host:
+
+length(sim00ap)/length(sim00phydata[,1])*100 # Pairs with <80% similarity
+length(sim80ap)/length(sim80phydata[,1])*100 # Pairs with >80% similarity
+
+# Fraction of Chordate / Arthropod pairs among species pairs that have hosts from different phyla:
+
+length(sim00cap)/length(sim00phydata[,1])*100 # Pairs with <80% similarity
+length(sim80cap)/length(sim80phydata[,1])*100 # Pairs with >80% similarity
+
+# OKAY! RESUME!
+
 # Variable cleanup
 
 rm(px, py, pxx, pyy, pzz0, pzz1, phytrus, pim13dataphytrus, pim13dataphy)
@@ -694,8 +891,6 @@ rm(cx, cy, cxx, cyy, czz0, czz1, clstrus, pim13dataclstrus, pim13datacls)
 rm(ox, oy, oxx, oyy, ozz0, ozz1, ordtrus, pim13dataordtrus, pim13dataord)
 rm(fx, fy, fxx, fyy, fzz0, fzz1, famtrus, pim13datafamtrus, pim13datafam)
 rm(pzz2, czz2, ozz2, fzz2, tzz1)
-
-# OKAY! RESUME!
 
 # ------------------------------------------------------------------------------
 #
@@ -710,7 +905,7 @@ rm(pzz2, czz2, ozz2, fzz2, tzz1)
 cladestotal3 <- cladestotal2
 empt <- which(cladestotal3[,3]=="")
 emptspe <- as.vector(cladestotal3[empt,1])
-emptspe <- emptspe[-11]
+emptspe <- emptspe[-c(6,7,8,14)]
 
 pim13data3 <- pim13data
 
@@ -1080,7 +1275,7 @@ empt <- which(cladestotal3[,13]=="")
 napt <- which(is.na(cladestotal3[,13]))
 empt <- c(empt, napt)
 emptspe <- as.vector(cladestotal3[empt,1])
-emptspe <- emptspe[-38]
+emptspe <- emptspe[-c(15,16,17,41)]
 
 pim13data4 <- data.frame(pim13data, "Shared Tissue?"=NA, stringsAsFactors=FALSE)
 colnames(pim13data4) <- c(colnames(pim13data), "Shared Tissue?")

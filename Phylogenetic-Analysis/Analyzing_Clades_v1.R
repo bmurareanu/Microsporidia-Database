@@ -64,9 +64,9 @@ library(ggpubr)
 # Set working directory. Modify as need.
 # For 270 Species Tree, it's this:
 
-sourcedir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
-anadir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Analysis"
-maindir <- "C:/Users/*****/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
+sourcedir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Source"
+anadir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_Tree/Analysis"
+maindir <- "C:/Users/bmura/OneDrive/Documents/R_Projects/Microsporidia_Database/Phylogenetic_Trees/270_Spe_tree"
 
 setwd(anadir)
 
@@ -1469,10 +1469,10 @@ ggplot(sporevolDataU, aes(fill=Clade, x=Clade, y=`Spore Volume`)) +
                                  c("Clade 3", "Clade 4"),
                                  c("Clade 3", "Clade 5"),
                                  c("Clade 4", "Clade 5")),
-              annotations = c("p = 2.8e-9",
+              annotations = c("p = 3.8e-9",
                               "p = 6.3e-18",
-                              "p = 0.00023",
-                              "p = 0.00312",
+                              "p = 0.00024",
+                              "p = 0.00363",
                               "p = 1.0e-8"),
               y_position = c(280, 260, 240, 300, 280)) +
   scale_fill_manual(breaks=c("Clade 1", "Clade 3", "Clade 4", "Clade 5"),
@@ -2119,7 +2119,7 @@ clades <- rbind(clade1, clade3, clade4, clade5)
 hosts <- clades$hosts
 hosts <- unlist(strsplit(hosts, ';'))
 hosts <- unique(hosts)
-hosts <- hosts[-176]     # Remove "NA"
+hosts <- hosts[-174]     # Remove "NA"
 
 hosts1 <- clade1$hosts
 hosts1 <- unlist(strsplit(hosts1, ';'))
