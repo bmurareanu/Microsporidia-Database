@@ -3,7 +3,7 @@
 Code used for microsporidia database project.
 Raw data used for analysis are also included, in the form of .xlsx files.
 
-Publication link: https://www.biorxiv.org/content/10.1101/2021.02.21.432160v2
+Publication link: https://journals.asm.org/doi/10.1128/mBio.01490-21
 
 Database link: https://docs.google.com/spreadsheets/d/13Hj3vDl--k48oBCZ5tszE7-YEnoeqHlbJIfPLHiwKKk/edit#gid=1248304883
 
