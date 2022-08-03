@@ -1,6 +1,6 @@
 # Microsporidia-Database
 
-Code used for microsporidia database project.
+Code for "Generation of a Microsporidia Species Attribute Database and Analysis of the Extensive Ecological and Phenotypic Diversity of Microsporidia"
 Raw data used for analysis are also included, in the form of .xlsx files.
 
 Publication link: https://journals.asm.org/doi/10.1128/mBio.01490-21
